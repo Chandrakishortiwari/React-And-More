@@ -1,4 +1,6 @@
 import React from "react";
+import axios from 'axios';
+
 import { useFormik } from "formik";
 import loginSchema from '../schemas';
 
@@ -14,9 +16,16 @@ function Login() {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
     validationSchema: loginSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log(values);
-      resetForm(); // Reset form after submit
+    onSubmit:async (values, { resetForm }) => {
+      try {
+        const response = await axios.post("https://jsonplaceholder.typicode.com/users", values);
+        console.log("Data sent successfully:", response.data);
+        resetForm();
+        // Optionally show success message
+      } catch (error) {
+        console.error("Error sending data:", error);
+        // Optionally show error message
+      }
     }
   });
 
